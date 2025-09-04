@@ -1,0 +1,14 @@
+C:\Applications\csharp-dotnet-basic\bin\Debug\net9.0\csharp-dotnet-basic.exe
+C:\Applications\csharp-dotnet-basic\bin\Debug\net9.0\csharp-dotnet-basic.deps.json
+C:\Applications\csharp-dotnet-basic\bin\Debug\net9.0\csharp-dotnet-basic.runtimeconfig.json
+C:\Applications\csharp-dotnet-basic\bin\Debug\net9.0\csharp-dotnet-basic.dll
+C:\Applications\csharp-dotnet-basic\bin\Debug\net9.0\csharp-dotnet-basic.pdb
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\csharp-dotnet-basic.GeneratedMSBuildEditorConfig.editorconfig
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\csharp-dotnet-basic.AssemblyInfoInputs.cache
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\csharp-dotnet-basic.AssemblyInfo.cs
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\csharp-dotnet-basic.csproj.CoreCompileInputs.cache
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\csharp-dotnet-basic.dll
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\refint\csharp-dotnet-basic.dll
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\csharp-dotnet-basic.pdb
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\csharp-dotnet-basic.genruntimeconfig.cache
+C:\Applications\csharp-dotnet-basic\obj\Debug\net9.0\ref\csharp-dotnet-basic.dll
