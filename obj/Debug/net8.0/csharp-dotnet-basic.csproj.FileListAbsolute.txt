@@ -12,3 +12,4 @@ C:\Applications\csharp-dotnet-basic\obj\Debug\net8.0\refint\csharp-dotnet-basic.
 C:\Applications\csharp-dotnet-basic\obj\Debug\net8.0\csharp-dotnet-basic.pdb
 C:\Applications\csharp-dotnet-basic\obj\Debug\net8.0\csharp-dotnet-basic.genruntimeconfig.cache
 C:\Applications\csharp-dotnet-basic\obj\Debug\net8.0\ref\csharp-dotnet-basic.dll
+C:\Applications\csharp-dotnet-basic\obj\Debug\net8.0\csharp-dotnet-basic.sourcelink.json
