@@ -267,9 +267,9 @@ namespace CollectionDemo
 
             // A. Empty Queue, then Enqueue items
             var queue1 = new Queue<string>();
-            queue1.Enqueue("first");
-            queue1.Enqueue("second");
-            queue1.Enqueue("third");
+            queue1.Enqueue("A");
+            queue1.Enqueue("B");
+            queue1.Enqueue("C"); // A-B-C
 
             // Console.WriteLine("Queue1: " + string.Join(", ", queue1));
             // Console.WriteLine("Dequeue (removes front): " + queue1.Dequeue());
@@ -281,8 +281,8 @@ namespace CollectionDemo
             // Console.WriteLine(string.Join(", ", queue2));
 
             // C. Convert from List
-            var list = new List<string> { "apple", "banana", "cherry" };
-            var queue3 = new Queue<string>(list);
+            var list = new List<int> { 1, 2, 3 };
+            var queue3 = new Queue<int>(list);
             // Console.WriteLine(queue3);
             // Console.WriteLine(string.Join(", ", queue3));
 
@@ -312,16 +312,19 @@ namespace CollectionDemo
             var stack1 = new Stack<string>();
             stack1.Push("A");
             stack1.Push("B");
-            stack1.Push("C");
+            stack1.Push("C"); // C-B-A
 
             // Console.WriteLine("Stack1: " + string.Join(", ", stack1));
             // Console.WriteLine("Pop (removes top): " + stack1.Pop());
+            // Console.WriteLine("Stack1: " + string.Join(", ", stack1));
             // Console.WriteLine("Peek (see top without removing): " + stack1.Peek());
 
             // B. Using collection initializer (C# doesn’t have direct initializer for Stack so we build from IEnumerable).
             var stack2 = new Stack<int>([1, 2, 3]);
-            // Console.WriteLine(queue2);
-            // Console.WriteLine(string.Join(", ", queue2));
+            stack2.Push(4); // 4-3-2-1
+            stack2.Pop();
+            // Console.WriteLine(stack2);
+            // Console.WriteLine(string.Join(", ", stack2));
 
             // C. Convert from List
             var stackList = new List<string> { "apple", "banana", "cherry" };
@@ -337,43 +340,220 @@ namespace CollectionDemo
 
             // E. Clearing a Stack
             stack3.Clear();
-            Console.WriteLine(stack3);
-            Console.WriteLine(string.Join(", ", stack3));
+            // Console.WriteLine(stack3);
+            // Console.WriteLine(string.Join(", ", stack3));
 
 
-            // 8. LinkedList<T>
-            var linkedList = new LinkedList<int>();
-            linkedList.AddLast(10);
-            linkedList.AddLast(20);
-            linkedList.AddFirst(5);
-            // Console.WriteLine("LinkedList<T>: " + string.Join(", ", linkedList));
 
-            // 9. SortedList<TKey, TValue>
-            var sortedList = new SortedList<int, string>
+
+
+
+
+
+
+
+            // *** # 8. LinkedList<T>. Doubly-linked list: nodes connected forward & backward.
+
+            // A. Empty LinkedList, then Add items
+            var linkedList1 = new LinkedList<int>();
+            linkedList1.AddLast(10);   // tail
+            linkedList1.AddLast(20);
+            linkedList1.AddFirst(5);   // head
+            // Console.WriteLine(linkedList1);
+            // Console.WriteLine(string.Join(", ", linkedList1));
+
+            // B. Using collection initializer (not directly supported, but can use IEnumerable)
+            var linkedList2 = new LinkedList<string>(["apple", "banana", "cherry"]);
+            // Console.WriteLine(linkedList2);
+            // Console.WriteLine(string.Join(", ", linkedList2));
+
+            // C. Insert after/before a specific node
+            var node = linkedList1.Find(10);
+            if (node != null)
+            {
+                linkedList1.AddAfter(node, 15);
+                linkedList1.AddBefore(node, 8);
+            }
+            // Console.WriteLine(linkedList1);
+            // Console.WriteLine("LinkedList1 after inserts: " + string.Join(", ", linkedList1));
+
+            // D. Remove elements
+            linkedList1.Remove(20);
+            linkedList1.RemoveFirst();
+            linkedList1.RemoveLast();
+            // Console.WriteLine(linkedList1);
+            // Console.WriteLine("LinkedList1 after removes: " + string.Join(", ", linkedList1));
+
+            // E. Iterating forward and backward
+            foreach (var item in linkedList2)
+            {
+                // Console.WriteLine(item);
+            }
+
+            for (var n = linkedList2.Last; n != null; n = n.Previous)
+            {
+                // Console.WriteLine(n);
+            }
+
+
+
+
+
+
+
+
+
+
+            // *** # 9. SortedList<TKey, TValue>. Key-value pairs sorted by key, best for small datasets.
+
+            // A. Using collection initializer
+            var sortedList1 = new SortedList<int, string>
             {
                 [2] = "two",
-                [1] = "one"
+                [1] = "one",
+                [3] = "three"
             };
-            // Console.WriteLine("SortedList<TKey,TValue>:");
-            // foreach (var kv in sortedList)
-            //     Console.WriteLine($"{kv.Key}: {kv.Value}");
+            // Console.WriteLine(string.Join(", ", sortedList1));
+            foreach (var item in sortedList1)
+            {
+                // Console.WriteLine(item);
+            }
 
-            // 10. SortedDictionary<TKey, TValue>
-            var sortedDict = new SortedDictionary<int, string>
+            // B. Empty SortedList, then Add items
+            var sortedList2 = new SortedList<string, int>();
+            sortedList2.Add("cherry", 10);
+            sortedList2.Add("banana", 20);
+            sortedList2.Add("apple", 15);
+            // Console.WriteLine(sortedList2);
+            // Console.WriteLine(string.Join(", ", sortedList2));
+
+            // C. Access values by key
+            // Console.WriteLine("Value for 'banana': " + sortedList2["banana"]);
+
+            // D. Remove items
+            sortedList2.Remove("apple");
+            sortedList2.RemoveAt(0);
+            // Console.WriteLine(sortedList2);
+            foreach (var item in sortedList2)
+            {
+                // Console.WriteLine(item);
+            }
+
+            // E. Keys and Values collections
+            // Console.WriteLine("Keys: " + string.Join(", ", sortedList1.Keys));
+            // Console.WriteLine("Values: " + string.Join(", ", sortedList1.Values));
+
+
+
+
+
+
+
+
+
+
+            // *** # 10. SortedDictionary<TKey, TValue>. Key-value pairs sorted by key, better for larger datasets.
+
+            // A. Using collection initializer
+            var sortedDict1 = new SortedDictionary<int, string>
             {
                 [3] = "three",
                 [1] = "one",
                 [2] = "two"
             };
-            // Console.WriteLine("SortedDictionary<TKey,TValue>:");
-            // foreach (var kv in sortedDict)
-            //     Console.WriteLine($"{kv.Key}: {kv.Value}");
+            // Console.WriteLine(string.Join(", ", sortedDict1));
+            foreach (var item in sortedDict1)
+            {
+                // Console.WriteLine(item);
+            }
 
-            // 11. ConcurrentDictionary<TKey,TValue>
-            var concurrentDict = new ConcurrentDictionary<string, int>();
-            concurrentDict.TryAdd("user1", 100);
-            // Console.WriteLine("ConcurrentDictionary: user1 = " + concurrentDict["user1"]);
+            // B. Empty SortedDictionary, then Add items
+            var sortedDict2 = new SortedDictionary<string, int>();
+            sortedDict2.Add("cherry", 10);
+            sortedDict2.Add("banana", 20);
+            sortedDict2.Add("apple", 15);
+            // Console.WriteLine(sortedDict2);
+            // Console.WriteLine(string.Join(", ", sortedDict2));
 
+            // C. Access values by key
+            // Console.WriteLine("Value for 'banana': " + sortedDict2["banana"]);
+
+            // D. Remove items
+            sortedDict2.Remove("apple");
+            // sortedDict2.RemoveAt(0);  // N/A
+            // Console.WriteLine(sortedDict2);
+            foreach (var item in sortedDict2)
+            {
+                // Console.WriteLine(item);
+            }
+
+
+            // E. Keys and Values collections
+            // Console.WriteLine("Keys: " + string.Join(", ", sortedDict1.Keys));
+            // Console.WriteLine("Values: " + string.Join(", ", sortedDict1.Values));
+
+
+
+
+
+
+
+
+
+
+            // *** # 11. ConcurrentDictionary<TKey, TValue>. Thread-safe dictionary for multi-threaded applications. | Unlike Dictionary, multiple threads can safely read/write at the same time.
+
+            // A. Empty ConcurrentDictionary, then TryAdd items
+            var concurrentDict1 = new ConcurrentDictionary<string, int>();
+            concurrentDict1.TryAdd("Alice", 25);
+            concurrentDict1.TryAdd("Bob", 30);
+            // Console.WriteLine(concurrentDict1);
+            // Console.WriteLine(string.Join(", ", concurrentDict1));
+
+            // B. Using collection initializer (indirect via IEnumerable of KeyValuePair)
+            var initData = new List<KeyValuePair<string, int>>
+            {
+                new("USA", 1),
+                new("France", 2)
+            };
+
+            var concurrentDict2 = new ConcurrentDictionary<string, int>(initData);
+            // Console.WriteLine(concurrentDict2);
+            // Console.WriteLine(string.Join(", ", concurrentDict2));
+
+            // C. AddOrUpdate (safe way to insert/update)
+            concurrentDict1.AddOrUpdate("Alice", 1, (key, oldValue) => oldValue + 100);
+            concurrentDict1.AddOrUpdate("Charlie", 200, (key, oldValue) => oldValue);
+            // Console.WriteLine(concurrentDict1);
+            // Console.WriteLine(string.Join(", ", concurrentDict1));
+
+            // D. GetOrAdd
+            int val = concurrentDict1.GetOrAdd("Rum", 100);
+            // Console.WriteLine(concurrentDict1);
+            // Console.WriteLine(string.Join(", ", concurrentDict1));
+
+            // E. Remove (TryRemove)
+            if (concurrentDict1.TryRemove("Rum", out var removedValue))
+            {
+                // Console.WriteLine($"Removed Rum with value {removedValue}");
+            }
+
+
+            // F. Iterating (safe snapshot while iterating)
+            foreach (var item in concurrentDict1)
+            {
+                Console.WriteLine(item);
+            }
+
+
+
+
+
+
+
+
+
+            
             // 12. ImmutableList<T>
             var immutableList = ImmutableList.Create(1, 2, 3);
             var newList = immutableList.Add(4);
