@@ -10,6 +10,22 @@ namespace CollectionDemo
 {
     public static class Collections
     {
+        private static void Fruits2_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    Console.WriteLine($"Item added: {e.NewItems![0]}");
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    Console.WriteLine($"Item removed: {e.OldItems![0]}");
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    Console.WriteLine($"Item replaced: {e.OldItems![0]} → {e.NewItems![0]}");
+                    break;
+            }
+        }
+
         public static void Run()
         {
             // *** # 1. Array. The number of items is locked. | Can modify existing elements by index.
@@ -542,7 +558,7 @@ namespace CollectionDemo
             // F. Iterating (safe snapshot while iterating)
             foreach (var item in concurrentDict1)
             {
-                Console.WriteLine(item);
+                // Console.WriteLine(item);
             }
 
 
@@ -553,60 +569,389 @@ namespace CollectionDemo
 
 
 
-            
-            // 12. ImmutableList<T>
-            var immutableList = ImmutableList.Create(1, 2, 3);
-            var newList = immutableList.Add(4);
-            // Console.WriteLine("ImmutableList<T>: " + string.Join(", ", immutableList));
-            // Console.WriteLine("ImmutableList<T> after Add: " + string.Join(", ", newList));
 
-            // 13. ObservableCollection<T>
-            var observable = new ObservableCollection<string> { "A", "B" };
-            // observable.CollectionChanged += (s, e) =>
-            //     Console.WriteLine($"ObservableCollection changed: {e.Action}");
-            observable.Add("C");
+            // *** #12. ImmutableList<T>. Once created, it cannot be modified. | Any add/remove/modification produces a new list instance (Original Untouched)
 
-            // 14. ConcurrentBag<T>
-            var bag = new ConcurrentBag<int>();
-            bag.Add(1);
-            bag.Add(2);
-            // Console.WriteLine("ConcurrentBag<T>: " + string.Join(", ", bag));
+            // A. Create empty ImmutableList
+            var emptyImmutableList = ImmutableList<int>.Empty;
+            // Console.WriteLine(emptyImmutableList);
 
-            // 15. ImmutableDictionary<TKey, TValue>
-            var immutableDict = ImmutableDictionary.CreateBuilder<string, int>();
-            immutableDict.Add("x", 1);
-            var finalDict = immutableDict.ToImmutable();
-            // Console.WriteLine("ImmutableDictionary: x = " + finalDict["x"]);
+            // B. Create with items (builder style)
+            var immutableNumbers = ImmutableList.Create(1, 2, 3);
+            // Console.WriteLine(immutableNumbers);
+            // Console.WriteLine(string.Join(", ", immutableNumbers));
 
-            // 16. BitArray
-            var bits = new BitArray(5);
-            bits.Set(0, true);
-            // Console.WriteLine("BitArray[0]: " + bits[0]);
+            // C. Add returns a NEW ImmutableList (original unchanged)
+            var newNumbers = immutableNumbers.Add(4);
+            // Console.WriteLine(immutableNumbers);
+            // Console.WriteLine(string.Join(", ", immutableNumbers));
+            // Console.WriteLine(newNumbers);
+            // Console.WriteLine(string.Join(", ", newNumbers));
 
-            // 17. NameValueCollection
-            var nvc = new NameValueCollection();
-            nvc.Add("fruit", "apple");
-            nvc.Add("fruit", "banana");
-            // Console.WriteLine("NameValueCollection fruit: " + string.Join(", ", nvc.GetValues("fruit")));
+            // D. AddRange
+            var moreNumbers = immutableNumbers.AddRange([5, 6]);
+            // Console.WriteLine(immutableNumbers);
+            // Console.WriteLine(string.Join(", ", immutableNumbers));
+            // Console.WriteLine(moreNumbers);
+            // Console.WriteLine(string.Join(", ", moreNumbers));
 
-            // 18. ConcurrentStack<T>
-            // Thread-safe LIFO stack
-            var concurrentStack = new ConcurrentStack<int>();
-            concurrentStack.Push(10);
-            concurrentStack.Push(20);
-            concurrentStack.TryPop(out int popped);
-            // Console.WriteLine("ConcurrentStack<T> popped: " + popped);
+            // E. Remove also returns a NEW ImmutableList
+            var removed = immutableNumbers.Remove(2);
+            // Console.WriteLine(immutableNumbers);
+            // Console.WriteLine(string.Join(", ", immutableNumbers));
+            // Console.WriteLine(removed);
+            // Console.WriteLine(string.Join(", ", removed));
 
-            // 19. BlockingCollection<T>
-            // Thread-safe producer-consumer collection
-            using (var blocking = new BlockingCollection<int>())
+            // F. Replace an item
+            var replaced = immutableNumbers.Replace(3, 99);
+            // Console.WriteLine(immutableNumbers);
+            // Console.WriteLine(string.Join(", ", immutableNumbers));
+            // Console.WriteLine(replaced);
+            // Console.WriteLine(string.Join(", ", replaced));
+
+            // G. Indexing works like normal List
+            // Console.WriteLine("First element: " + immutableNumbers[0]);
+
+            // H. Iteration
+            foreach (var item in immutableNumbers)
             {
-                blocking.Add(1);
-                blocking.Add(2);
-                blocking.CompleteAdding();
-                // foreach (var item in blocking)
-                //     Console.WriteLine("BlockingCollection<T> item: " + item);
+                // Console.WriteLine(item);
             }
+
+
+
+
+
+
+
+
+
+            // *** #13. ImmutableDictionary<TKey, TValue>. Thread-safe key-value store that cannot be modified after creation. | Any add/remove/update returns a NEW dictionary (Original Untouched).
+
+            // A. Create empty ImmutableDictionary
+            var emptyDict = ImmutableDictionary<string, int>.Empty;
+
+            // B. Create with initial items
+            var dict = ImmutableDictionary.CreateRange(
+            [
+                new KeyValuePair<string,int>("Alice", 25),
+                new KeyValuePair<string,int>("Bob", 30)
+            ]);
+
+            foreach (var item in dict)
+            {
+                // Console.WriteLine(item);
+            }
+
+            // C. Add returns a NEW ImmutableDictionary
+            var newDict = dict.Add("Charlie", 40);
+            foreach (var item in dict)
+            {
+                // Console.WriteLine(item);
+            }
+
+            foreach (var item in newDict)
+            {
+                // Console.WriteLine(item);
+            }
+
+            // D. AddRange
+            var moreDict = dict.AddRange(new Dictionary<string, int> { { "David", 50 }, { "Eve", 60 } });
+            foreach (var item in moreDict)
+            {
+                // Console.WriteLine(item);
+            }
+
+            // E. Remove returns a NEW ImmutableDictionary
+            var removedDict = moreDict.Remove("Bob");
+            foreach (var item in removedDict)
+            {
+                // Console.WriteLine(item);
+            }
+
+            // F. SetItem (updates a key, returns a new dictionary)
+            var updated = dict.SetItem("Alice", 26);
+            foreach (var item in updated)
+            {
+                // Console.WriteLine(item);
+            }
+
+            // G. TryGetValue
+            if (dict.TryGetValue("Alice", out var age))
+            {
+                // Console.WriteLine(age);
+            }
+
+
+
+
+
+
+
+
+
+            // *** #14. ObservableCollection<T>. A List<T> that raises an event when items are added/removed/replaced. | Common in WPF/MAUI/WinUI for UI data binding.
+
+            // A. Create with initializer
+            var fruits1 = new ObservableCollection<string> { "Apple", "Banana" };
+
+            // B. Empty, then add items
+            var fruits2 = new ObservableCollection<string>
+            {
+                "Orange",
+                "Mango"
+            };
+
+            // C. Attach event handler to listen for changes
+            fruits2.CollectionChanged += Fruits2_CollectionChanged;
+
+            // fruits2.Add("Grapes"); // Event is Triggered.
+            // fruits2.Remove("Orange"); // Event is Triggered.
+            // fruits2[0] = "Kiwi"; // Event is Triggered.
+
+            // Console.WriteLine(fruits2);
+            // Console.WriteLine(string.Join(", ", fruits2));
+
+
+
+
+
+
+
+
+
+            // *** #15. ConcurrentBag<T>. A thread-safe, unordered collection (like a sack). | Great for multi-threaded producer-consumer scenarios where order doesn't matter.
+
+            // A. Create and add items (single-threaded)
+            var bag1 = new ConcurrentBag<int>
+            {
+                1,
+                2,
+                3,
+                4,
+                5
+            };
+
+            // Console.WriteLine(bag1);
+            // Console.WriteLine(string.Join(", ", bag1));
+
+            // B. TryTake (removes an item) & TryPeek (views item without removing)
+            if (bag1.TryTake(out int removedFromBag))
+            {
+                // Console.WriteLine($"Removed: {removedFromBag}");
+            }
+
+            if (bag1.TryPeek(out int peek))
+            {
+                // Console.WriteLine($"Peeked: {peek}");
+            }
+
+
+            // C. Multi-threaded add
+            var bag2 = new ConcurrentBag<int>();
+            Parallel.For(0, 10, i => bag2.Add(i));
+            // Console.WriteLine(bag2);
+            // Console.WriteLine(string.Join(", ", bag2));
+
+            // D. Multi-threaded take
+            int totalRemoved = 0;
+            Parallel.For(0, 5, _ =>
+            {
+                if (bag2.TryTake(out int item))
+                    Interlocked.Add(ref totalRemoved, 1);
+            });
+
+            // Console.WriteLine($"Removed {totalRemoved} items in parallel.");
+            // Console.WriteLine("Remaining in Bag2: " + string.Join(", ", bag2));
+            // Console.WriteLine(bag2);
+            // Console.WriteLine(string.Join(", ", bag2));
+
+
+
+
+
+
+
+
+
+            // *** #16. BitArray. A compact collection of bit values (true/false), stored as bits (very memory-efficient). | Great for flags, masks, or large boolean datasets. |  Index-based access
+
+            // A. From a length (all bits default to false)
+            var bits1 = new BitArray(8);
+            bits1[0] = true;
+            bits1[3] = true;
+
+            // Console.WriteLine(bits1);
+            // Console.WriteLine("bits1: " + string.Join(", ", bits1.Cast<bool>()));
+
+            // B. From a bool[] array
+            bool[] bools = [true, false, true, true];
+            var bits2 = new BitArray(bools);
+
+            // Console.WriteLine(bits2);
+            // Console.WriteLine("bits2: " + string.Join(", ", bits2.Cast<bool>()));
+
+            // C. From a byte[] (each byte is 8 bits)
+            byte[] data = [5];
+            var bits3 = new BitArray(data);
+
+            // Console.WriteLine(bits3);
+            // Console.WriteLine("bits3: " + string.Join(", ", bits3.Cast<bool>()));
+
+            // D. Bit operations
+            var a = new BitArray([true, false, true, false]);
+            var b = new BitArray([true, true, false, false]);
+
+            var andResult = a.And(b);
+            // For OR, XOR, NOT use: a.Or(b), a.Xor(b), a.Not()
+            // Console.WriteLine("AND: " + string.Join(", ", andResult.Cast<bool>()));
+
+
+
+
+
+
+
+
+
+            // *** #17. NameValueCollection. Stores string keys and string values. | Allows multiple values for the SAME key (unlike Dictionary). | Maintains the order of keys as added.
+
+            // A. Create and add items
+            var nvc1 = new NameValueCollection();
+            nvc1.Add("color", "red");
+            nvc1.Add("color", "blue");
+            nvc1.Add("shape", "circle");
+
+            foreach (string key in nvc1)
+            {
+                // Console.WriteLine(key);
+            }
+
+            // B. Retrieve values
+            // string single = nvc1["color"];
+            // string[] allColors = nvc1.GetValues("color");
+
+            // C. Modify or remove
+            nvc1.Set("color", "green");
+            nvc1.Remove("shape");
+            foreach (string key in nvc1)
+            {
+                // Console.WriteLine($"{key}: {nvc1[key]}");
+            }
+
+            // D. Other methods
+            // Console.WriteLine(nvc1.Count);
+            // Console.WriteLine(nvc1.HasKeys());
+
+
+
+
+
+
+
+
+
+            // *** #18. ConcurrentStack<T>. A thread-safe LIFO (Last In First Out) collection. | Multiple threads can push/pop simultaneously without locks.
+
+            // A. Create and add items (single-threaded)
+            var concurrentStack1 = new ConcurrentStack<int>();
+            concurrentStack1.Push(1);
+            concurrentStack1.Push(2);
+            concurrentStack1.Push(3);
+
+            // Console.WriteLine(concurrentStack1);
+            // Console.WriteLine(string.Join(", ", concurrentStack1));
+
+            // B. Pop items
+            if (concurrentStack1.TryPop(out int myPopped))
+            {
+                // Console.WriteLine($"Popped: {myPopped}");
+            }
+
+            if (concurrentStack1.TryPeek(out int peeked))
+            {
+                // Console.WriteLine($"Peeked: {peek} (top of stack without removing)");
+            }
+
+
+            // C. PushRange / PopRange
+            var concurrentStack2 = new ConcurrentStack<int>();
+            concurrentStack2.PushRange([10, 20, 30]);
+
+            // Console.WriteLine(concurrentStack2);
+            // Console.WriteLine(string.Join(", ", concurrentStack2));
+
+            int[] poppedRange = new int[2];
+            int poppedCount = concurrentStack2.TryPopRange(poppedRange);
+            // Console.WriteLine($"Popped {poppedCount} items: " + string.Join(", ", poppedRange));
+
+            // D. Multi-threaded operations
+            var concurrentStack3 = new ConcurrentStack<int>();
+            Parallel.For(0, 5, i => concurrentStack3.Push(i));
+            int totalPopped = 0;
+            Parallel.For(0, 5, i =>
+            {
+                if (concurrentStack3.TryPop(out _))
+                    Interlocked.Increment(ref totalPopped);
+            });
+            // Console.WriteLine($"Popped {totalPopped} items concurrently.");
+
+
+
+
+
+
+
+
+
+            // *** #19. BlockingCollection<T>. A thread-safe producer/consumer collection that can BLOCK. | When adding to a full collection or taking from an empty one. | Ideal for producer-consumer scenarios with backpressure.
+
+            // A. Basic usage with default underlying collection (ConcurrentQueue<T>)
+            using var collection = new BlockingCollection<int>(boundedCapacity: 5);
+
+            // Producer Task
+            var producer = Task.Run(() =>
+            {
+                for (int i = 1; i <= 10; i++)
+                {
+                    collection.Add(i);
+                    // Console.WriteLine($"Produced: {i}");
+                }
+                collection.CompleteAdding();
+            });
+
+            // Consumer Task
+            var consumer = Task.Run(() =>
+            {
+                foreach (var myItem in collection.GetConsumingEnumerable())
+                {
+                    // Console.WriteLine($"Consumed: {myItem}");
+                    Thread.Sleep(100);
+                }
+            });
+
+            Task.WaitAll(producer, consumer);
+
+            // B. TryAdd / TryTake with timeout
+            using var bc2 = new BlockingCollection<string>
+            {
+                "apple"
+            };
+
+            if (bc2.TryTake(out string? myItem, TimeSpan.FromMilliseconds(500)))
+            {
+                // Console.WriteLine("Took item: " + myItem);
+            }
+                
+
+            // C. Different underlying collection (e.g., stack behavior)
+            var stackBased = new BlockingCollection<int>(new ConcurrentStack<int>())
+            {
+                1,
+                2
+            };
+
+            Console.WriteLine("Stack-based: " + stackBased.Take());
         }
     }
 }

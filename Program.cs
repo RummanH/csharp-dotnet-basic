@@ -85,5 +85,4 @@
 
 using CollectionDemo;
 
-// Collections.Run();
-Console.WriteLine("Hello From Rider");
+Collections.Run();
